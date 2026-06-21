@@ -1,4 +1,42 @@
-<h2>Add Project</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+    
+    <style>
+      .drop-zone{
+    border:2px dashed #00d084;
+    padding:40px;
+    text-align:center;
+    border-radius:12px;
+    cursor:pointer;
+    color:#aaa;
+    transition:0.3s;
+}
+
+.drop-zone:hover{
+    background:rgba(0,208,132,0.05);
+    color:#00d084;
+}
+
+#preview{
+    margin-top:10px;
+    border-radius:10px;
+}
+    </style>
+</head>
+<body>
+
+    <h2>Add Project</h2>
+
+<div id="dropZone" class="drop-zone">
+    <p>Drag & Drop Image Here or Click</p>
+    <input type="file" id="fileInput" hidden accept="image/*">
+</div>
+
+<img id="preview" style="max-width:200px; display:none;">
 
 <form id="projectForm">
     <input id="title" placeholder="Title" required>
@@ -10,3 +48,7 @@
 </form>
 
 <script src="admin.js"></script>
+
+</body>
+</html>
+
