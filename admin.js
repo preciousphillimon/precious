@@ -1,4 +1,4 @@
-const SUPABASE_URL = "bhzbvuqylfzvcogspbix";
+const SUPABASE_URL = "https://bhzbvuqylfzvcogspbix.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJoemJ2dXF5bGZ6dmNvZ3NwYml4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODQwOTcsImV4cCI6MjA5NzU2MDA5N30.NcJrl4DONWt_DQyWX_dR6IBt4pXz-10nqofHf1hMMAs";
 
 document.getElementById("projectForm").addEventListener("submit", async (e) => {
