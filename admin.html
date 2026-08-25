@@ -1,54 +1,951 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Page</title>
-    
-    <style>
-      .drop-zone{
-    border:2px dashed #00d084;
-    padding:40px;
-    text-align:center;
-    border-radius:12px;
-    cursor:pointer;
-    color:#aaa;
-    transition:0.3s;
-}
 
-.drop-zone:hover{
-    background:rgba(0,208,132,0.05);
-    color:#00d084;
-}
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-#preview{
-    margin-top:10px;
-    border-radius:10px;
-}
-    </style>
+    <meta name="theme-color"
+        content="#0b0f19">
+
+    <meta name="description"
+        content="Precious Phillimon Portfolio Admin Panel">
+
+    <title>Admin Panel | Precious Phillimon</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="admin.css">
+
 </head>
+
 <body>
 
-    <h2>Add Project</h2>
+<!-- =========================
+     ADMIN LAYOUT
+========================= -->
 
-<div id="dropZone" class="drop-zone">
-    <p>Drag & Drop Image Here or Click</p>
-    <input type="file" id="fileInput" hidden accept="image/*">
+<div class="admin-layout">
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-logo">
+
+            <div class="logo-icon">
+                <i class="fa-solid fa-cube"></i>
+            </div>
+
+            <div>
+                <h2>Precious</h2>
+                <span>Admin Panel</span>
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+            <a href="#dashboard" class="nav-item active">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+            <a href="#add-project" class="nav-item">
+
+                <i class="fa-solid fa-plus"></i>
+
+                <span>Add Project</span>
+
+            </a>
+
+            <a href="#projects" class="nav-item">
+
+                <i class="fa-solid fa-folder-open"></i>
+
+                <span>Projects</span>
+
+            </a>
+
+            <a href="#settings" class="nav-item">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <span>Settings</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <a href="index.html" class="back-site">
+
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                <span>View Website</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="admin-main">
+
+
+        <!-- =========================
+             TOPBAR
+        ========================== -->
+
+        <header class="admin-header">
+
+            <div class="header-left">
+
+                <button
+                    type="button"
+                    id="sidebarToggle"
+                    class="sidebar-toggle"
+                    aria-label="Toggle sidebar">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+                <div>
+
+                    <h1>Dashboard</h1>
+
+                    <p>
+                        Manage your portfolio projects
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="header-right">
+
+                <div class="admin-profile">
+
+                    <div class="profile-avatar">
+                        PP
+                    </div>
+
+                    <div class="profile-info">
+
+                        <strong>
+                            Precious Phillimon
+                        </strong>
+
+                        <span>
+                            Administrator
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
+
+        <section
+            id="dashboard"
+            class="admin-section dashboard-section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Overview
+                    </span>
+
+                    <h2>
+                        Portfolio Dashboard
+                    </h2>
+
+                    <p>
+                        Manage your creative work from one place.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- STAT CARDS -->
+
+            <div class="dashboard-stats">
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-icon">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Total Projects</span>
+
+                        <h3 id="totalProjects">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-icon">
+                        <i class="fa-solid fa-pen-ruler"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Design Projects</span>
+
+                        <h3 id="designProjects">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-icon">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Video Projects</span>
+
+                        <h3 id="videoProjects">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-icon">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Featured</span>
+
+                        <h3 id="featuredProjects">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             ADD PROJECT
+        ========================== -->
+
+        <section
+            id="add-project"
+            class="admin-section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        <i class="fa-solid fa-plus"></i>
+                        New Project
+                    </span>
+
+                    <h2>
+                        Add Project
+                    </h2>
+
+                    <p>
+                        Add a new project to your portfolio.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROJECT FORM -->
+
+            <form
+                id="projectForm"
+                class="project-form">
+
+
+                <!-- IMAGE AREA -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+
+                        <i class="fa-solid fa-image"></i>
+
+                        <div>
+
+                            <h3>Project Image</h3>
+
+                            <p>
+                                Upload the main image for your project.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="dropZone"
+                        class="drop-zone">
+
+
+                        <div class="drop-icon">
+
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                        </div>
+
+
+                        <h3>
+                            Drag & Drop your image
+                        </h3>
+
+
+                        <p>
+                            or click to browse from your device
+                        </p>
+
+
+                        <span class="upload-hint">
+                            JPG, PNG or WEBP
+                        </span>
+
+
+                        <input
+                            type="file"
+                            id="fileInput"
+                            accept="image/jpeg,image/png,image/webp"
+                            hidden>
+
+
+                    </div>
+
+
+                    <!-- IMAGE PREVIEW -->
+
+                    <div
+                        id="previewContainer"
+                        class="preview-container"
+                        hidden>
+
+                        <div class="preview-header">
+
+                            <span>
+                                Image Preview
+                            </span>
+
+                            <button
+                                type="button"
+                                id="removeImage"
+                                class="remove-image">
+
+                                <i class="fa-solid fa-xmark"></i>
+
+                                Remove
+
+                            </button>
+
+                        </div>
+
+
+                        <img
+                            id="preview"
+                            src=""
+                            alt="Project preview">
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PROJECT INFORMATION -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        <div>
+
+                            <h3>Project Information</h3>
+
+                            <p>
+                                Enter the details of your project.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+
+                        <!-- TITLE -->
+
+                        <div class="form-group full">
+
+                            <label for="title">
+
+                                Project Title
+
+                                <span>*</span>
+
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-heading"></i>
+
+                                <input
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    placeholder="e.g. Media Convex Brand Identity"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- CATEGORY -->
+
+                        <div class="form-group">
+
+                            <label for="category">
+
+                                Category
+
+                                <span>*</span>
+
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-layer-group"></i>
+
+                                <select
+                                    id="category"
+                                    name="category"
+                                    required>
+
+                                    <option value="">
+                                        Select category
+                                    </option>
+
+                                    <option value="Design">
+                                        Design
+                                    </option>
+
+                                    <option value="Branding">
+                                        Branding
+                                    </option>
+
+                                    <option value="Video">
+                                        Video
+                                    </option>
+
+                                    <option value="Web">
+                                        Web Design
+                                    </option>
+
+                                    <option value="Photography">
+                                        Photography
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- PROJECT LINK -->
+
+                        <div class="form-group">
+
+                            <label for="link">
+
+                                Project Link
+
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-link"></i>
+
+                                <input
+                                    type="url"
+                                    id="link"
+                                    name="link"
+                                    placeholder="https://example.com">
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- IMAGE URL -->
+
+                        <div class="form-group full">
+
+                            <label for="image">
+
+                                Image URL
+
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-link"></i>
+
+                                <input
+                                    type="url"
+                                    id="image"
+                                    name="image"
+                                    placeholder="Image URL will appear here after upload">
+
+                            </div>
+
+                            <small>
+                                You can leave this empty when using image upload.
+                            </small>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- FORM ACTIONS -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="reset"
+                        id="resetForm"
+                        class="btn-secondary">
+
+                        <i class="fa-solid fa-rotate-left"></i>
+
+                        Reset
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="submitProject"
+                        class="btn-primary">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Project
+
+                    </button>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+
+                <div
+                    id="formMessage"
+                    class="form-message"
+                    hidden>
+                </div>
+
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =========================
+             PROJECTS
+        ========================== -->
+
+        <section
+            id="projects"
+            class="admin-section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        <i class="fa-solid fa-folder-open"></i>
+                        Portfolio
+                    </span>
+
+                    <h2>
+                        Your Projects
+                    </h2>
+
+                    <p>
+                        Manage the projects displayed on your website.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="#add-project"
+                    class="add-project-btn">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add Project
+
+                </a>
+
+            </div>
+
+
+            <!-- PROJECT SEARCH -->
+
+            <div class="projects-toolbar">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="search"
+                        id="projectSearch"
+                        placeholder="Search projects...">
+
+                </div>
+
+
+                <div class="category-filter">
+
+                    <select id="projectFilter">
+
+                        <option value="all">
+                            All Categories
+                        </option>
+
+                        <option value="Design">
+                            Design
+                        </option>
+
+                        <option value="Branding">
+                            Branding
+                        </option>
+
+                        <option value="Video">
+                            Video
+                        </option>
+
+                        <option value="Web">
+                            Web Design
+                        </option>
+
+                        <option value="Photography">
+                            Photography
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROJECT LIST -->
+
+            <div
+                id="projectsList"
+                class="projects-list">
+
+
+                <!-- Empty state -->
+
+                <div
+                    id="emptyProjects"
+                    class="empty-projects">
+
+                    <div class="empty-icon">
+
+                        <i class="fa-solid fa-folder-open"></i>
+
+                    </div>
+
+                    <h3>
+                        No Projects Yet
+                    </h3>
+
+                    <p>
+                        Add your first project to your portfolio.
+                    </p>
+
+                    <a
+                        href="#add-project"
+                        class="btn-primary">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add First Project
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             SETTINGS
+        ========================== -->
+
+        <section
+            id="settings"
+            class="admin-section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+
+                        <i class="fa-solid fa-gear"></i>
+
+                        Settings
+
+                    </span>
+
+                    <h2>
+                        Admin Settings
+                    </h2>
+
+                    <p>
+                        Manage your dashboard preferences.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-card">
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <div class="setting-icon">
+
+                            <i class="fa-solid fa-globe"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Portfolio Website
+                            </h3>
+
+                            <p>
+                                Open your public portfolio.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        href="index.html"
+                        class="setting-btn">
+
+                        Visit Website
+
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                    </a>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-info">
+
+                        <div class="setting-icon">
+
+                            <i class="fa-solid fa-database"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Database
+                            </h3>
+
+                            <p>
+                                Projects are managed through Supabase.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="status-badge">
+
+                        <i class="fa-solid fa-circle"></i>
+
+                        Connected
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+
+        <footer class="admin-footer">
+
+            <p>
+                © 2026 Precious Phillimon.
+                Admin Dashboard.
+            </p>
+
+            <span>
+                Portfolio Management System
+            </span>
+
+        </footer>
+
+
+    </main>
+
 </div>
 
-<img id="preview" style="max-width:200px; display:none;">
 
-<form id="projectForm">
-    <input id="title" placeholder="Title" required>
-    <input id="category" placeholder="Category">
-    <input id="image" placeholder="Image URL">
-    <input id="link" placeholder="Project Link">
 
-    <button type="submit">Add</button>
-</form>
+<!-- =========================
+     MOBILE OVERLAY
+========================= -->
+
+<div
+    id="sidebarOverlay"
+    class="sidebar-overlay">
+</div>
+
+
+
+<!-- =========================
+     ADMIN JAVASCRIPT
+========================= -->
 
 <script src="admin.js"></script>
 
 </body>
 </html>
-
