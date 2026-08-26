@@ -880,6 +880,14 @@
 
                 </button>
 
+              <button
+                    type="button"
+                    data-filter="web">
+
+                    Website
+
+                </button>
+
                 <button
                     type="button"
                     data-filter="video">
@@ -1288,7 +1296,75 @@
         <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
 
     </button>
+<!-- =====================================================
+     PROJECT MODAL
+===================================================== -->
 
+<div
+    id="projectModal"
+    class="project-modal"
+    aria-hidden="true"
+>
+
+    <div class="project-modal-content">
+
+        <button
+            type="button"
+            id="modalClose"
+            class="modal-close"
+            aria-label="Close project"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+
+        <div class="modal-image-wrapper">
+
+            <img
+                id="modalImage"
+                src=""
+                alt="Project preview"
+            >
+
+        </div>
+
+
+        <div class="modal-info">
+
+            <span
+                id="modalCategory"
+                class="modal-category"
+            >
+                Design
+            </span>
+
+
+            <h2 id="modalTitle">
+                Project Title
+            </h2>
+
+
+            <p id="modalDescription">
+                A project from my creative portfolio.
+            </p>
+
+
+            <a
+                id="modalLink"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="modal-project-link"
+            >
+                View Project
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
 
     <!-- ===========================
             JAVASCRIPT

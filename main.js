@@ -1,10 +1,4 @@
 /* =========================================================
-   PRECIOUS PHILLIMON PORTFOLIO
-   MAIN JAVASCRIPT
-========================================================= */
-
-
-/* =========================================================
    LOADER
 ========================================================= */
 
@@ -22,7 +16,7 @@ window.addEventListener("load", () => {
 
 
 /* =========================================================
-   MOBILE NAVIGATION
+   MOBILE NAV
 ========================================================= */
 
 const menuBtn = document.getElementById("menuBtn");
@@ -32,62 +26,71 @@ if (menuBtn && nav) {
 
     menuBtn.addEventListener("click", () => {
 
-        const isOpen = nav.classList.toggle("active");
+        nav.classList.toggle("active");
 
-        menuBtn.setAttribute(
-            "aria-expanded",
-            isOpen ? "true" : "false"
-        );
+        const icon = menuBtn.querySelector("i");
 
-    });
+        if (icon) {
 
-
-    // Close menu when clicking a navigation link
-
-    nav.querySelectorAll("a").forEach(link => {
-
-        link.addEventListener("click", () => {
-
-            nav.classList.remove("active");
-
-            menuBtn.setAttribute(
-                "aria-expanded",
-                "false"
+            icon.classList.toggle(
+                "fa-bars",
+                !nav.classList.contains("active")
             );
 
-        });
+            icon.classList.toggle(
+                "fa-xmark",
+                nav.classList.contains("active")
+            );
+
+        }
 
     });
 
 }
 
 
+document.querySelectorAll("#nav a").forEach(link => {
+
+    link.addEventListener("click", () => {
+
+        nav?.classList.remove("active");
+
+        const icon = menuBtn?.querySelector("i");
+
+        if (icon) {
+
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
+
+        }
+
+    });
+
+});
+
+
 /* =========================================================
-   ACTIVE NAVIGATION ON SCROLL
+   ACTIVE NAV ON SCROLL
 ========================================================= */
 
-const sections = document.querySelectorAll("section[id]");
-const navLinks = document.querySelectorAll("nav ul li a");
+const sections =
+    document.querySelectorAll("section[id]");
 
-function updateActiveNav() {
+const navLinks =
+    document.querySelectorAll("#nav a");
 
-    let currentSection = "";
+
+window.addEventListener("scroll", () => {
+
+    let current = "";
 
     sections.forEach(section => {
 
         const sectionTop =
             section.offsetTop - 180;
 
-        const sectionBottom =
-            sectionTop + section.offsetHeight;
-
-        if (
-            window.scrollY >= sectionTop &&
-            window.scrollY < sectionBottom
-        ) {
-
-            currentSection = section.id;
-
+        if (window.scrollY >= sectionTop) {
+            current = section.id;
         }
 
     });
@@ -97,10 +100,10 @@ function updateActiveNav() {
 
         link.classList.remove("active");
 
-        const href =
-            link.getAttribute("href");
-
-        if (href === `#${currentSection}`) {
+        if (
+            link.getAttribute("href") ===
+            `#${current}`
+        ) {
 
             link.classList.add("active");
 
@@ -108,39 +111,25 @@ function updateActiveNav() {
 
     });
 
-}
-
-window.addEventListener(
-    "scroll",
-    updateActiveNav
-);
-
-updateActiveNav();
+});
 
 
 /* =========================================================
-   BACK TO TOP BUTTON
+   BACK TO TOP
 ========================================================= */
 
 const topBtn =
     document.getElementById("topBtn");
 
+
 if (topBtn) {
-
-    topBtn.style.display = "none";
-
 
     window.addEventListener("scroll", () => {
 
-        if (window.scrollY > 400) {
-
-            topBtn.style.display = "flex";
-
-        } else {
-
-            topBtn.style.display = "none";
-
-        }
+        topBtn.classList.toggle(
+            "show",
+            window.scrollY > 400
+        );
 
     });
 
@@ -164,6 +153,7 @@ if (topBtn) {
 const contactForm =
     document.querySelector(".contact-form");
 
+
 if (contactForm) {
 
     contactForm.addEventListener(
@@ -172,19 +162,18 @@ if (contactForm) {
 
             event.preventDefault();
 
-            const button =
+            const btn =
                 contactForm.querySelector("button");
 
-            if (!button) return;
+            if (!btn) return;
+
+            const originalText =
+                btn.innerHTML;
 
 
-            const originalHTML =
-                button.innerHTML;
+            btn.disabled = true;
 
-
-            button.disabled = true;
-
-            button.innerHTML = `
+            btn.innerHTML = `
                 <i class="fa-solid fa-spinner fa-spin"></i>
                 Sending...
             `;
@@ -192,7 +181,7 @@ if (contactForm) {
 
             setTimeout(() => {
 
-                button.innerHTML = `
+                btn.innerHTML = `
                     <i class="fa-solid fa-check"></i>
                     Message Sent
                 `;
@@ -200,16 +189,16 @@ if (contactForm) {
 
                 setTimeout(() => {
 
-                    button.innerHTML =
-                        originalHTML;
+                    btn.innerHTML =
+                        originalText;
 
-                    button.disabled = false;
+                    btn.disabled = false;
 
                     contactForm.reset();
 
                 }, 2000);
 
-            }, 1200);
+            }, 1500);
 
         }
     );
@@ -218,28 +207,234 @@ if (contactForm) {
 
 
 /* =========================================================
-   SUPABASE CONFIGURATION
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL = "https://arqvyxwnkrhumvnstvgy.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFycXZ5eHdua3JodW12bnN0dmd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2OTM0NzAsImV4cCI6MjEwMzI2OTQ3MH0.siCWKtTK312QP0tqOG1jxRSuCy93_jn7jwSYDFfM3MM";
 
 
-
 /* =========================================================
-   PORTFOLIO VARIABLES
+   PORTFOLIO
 ========================================================= */
 
 const portfolioGrid =
     document.getElementById("portfolioGrid");
 
-const filterButtons =
-    document.querySelectorAll(
-        ".portfolio-filter button"
+let projects = [];
+
+
+/* =========================================================
+   PROJECT MODAL ELEMENTS
+========================================================= */
+
+const projectModal =
+    document.getElementById("projectModal");
+
+const modalClose =
+    document.getElementById("modalClose");
+
+const modalImage =
+    document.getElementById("modalImage");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
+const modalCategory =
+    document.getElementById("modalCategory");
+
+const modalDescription =
+    document.getElementById("modalDescription");
+
+const modalLink =
+    document.getElementById("modalLink");
+
+let currentProjectId = null;
+
+
+/* =========================================================
+   OPEN PROJECT MODAL
+========================================================= */
+
+function openProjectModal(project) {
+
+    if (!projectModal || !project) {
+        return;
+    }
+
+
+    currentProjectId =
+        project.id;
+
+
+    /* IMAGE */
+
+    if (modalImage) {
+
+        modalImage.src =
+            project.image_url || "";
+
+        modalImage.alt =
+            project.title ||
+            "Project";
+
+    }
+
+
+    /* TITLE */
+
+    if (modalTitle) {
+
+        modalTitle.textContent =
+            project.title ||
+            "Untitled Project";
+
+    }
+
+
+    /* CATEGORY */
+
+    if (modalCategory) {
+
+        modalCategory.textContent =
+            project.category ||
+            "Design";
+
+    }
+
+
+    /* DESCRIPTION */
+
+    if (modalDescription) {
+
+        modalDescription.textContent =
+            project.description ||
+            "A project from my creative portfolio.";
+
+    }
+
+
+    /* PROJECT LINK */
+
+    if (modalLink) {
+
+        const url =
+            String(
+                project.project_url || ""
+            ).trim();
+
+
+        if (url) {
+
+            modalLink.href = url;
+
+            modalLink.target = "_blank";
+
+            modalLink.rel =
+                "noopener noreferrer";
+
+            modalLink.style.display =
+                "inline-flex";
+
+        } else {
+
+            modalLink.removeAttribute("href");
+
+            modalLink.style.display =
+                "none";
+
+        }
+
+    }
+
+
+    /* SHOW MODAL */
+
+    projectModal.classList.add("active");
+
+    document.body.classList.add(
+        "modal-open"
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE PROJECT MODAL
+========================================================= */
+
+function closeProjectModal() {
+
+    if (!projectModal) {
+        return;
+    }
+
+
+    projectModal.classList.remove(
+        "active"
     );
 
 
-let allProjects = [];
+    document.body.classList.remove(
+        "modal-open"
+    );
+
+
+    currentProjectId = null;
+
+}
+
+
+/* =========================================================
+   MODAL CLOSE BUTTON
+========================================================= */
+
+modalClose?.addEventListener(
+    "click",
+    closeProjectModal
+);
+
+
+/* =========================================================
+   CLICK OUTSIDE MODAL
+========================================================= */
+
+projectModal?.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            projectModal
+        ) {
+
+            closeProjectModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape" &&
+            projectModal?.classList.contains("active")
+        ) {
+
+            closeProjectModal();
+
+        }
+
+    }
+);
 
 
 /* =========================================================
@@ -251,7 +446,7 @@ async function loadProjects() {
     if (!portfolioGrid) {
 
         console.warn(
-            "Portfolio grid not found."
+            "portfolioGrid not found."
         );
 
         return;
@@ -259,12 +454,16 @@ async function loadProjects() {
     }
 
 
+    /* LOADING */
+
     portfolioGrid.innerHTML = `
         <div class="portfolio-loading">
 
             <i class="fa-solid fa-spinner fa-spin"></i>
 
-            <p>Loading projects...</p>
+            <p>
+                Loading projects...
+            </p>
 
         </div>
     `;
@@ -272,25 +471,32 @@ async function loadProjects() {
 
     try {
 
-        const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/projects?select=*`,
-            {
-                method: "GET",
+        const response =
+            await fetch(
+                `${SUPABASE_URL}/rest/v1/projects?select=*&order=created_at.desc`,
+                {
+                    method: "GET",
 
-                headers: {
+                    cache: "no-store",
 
-                    "apikey": SUPABASE_KEY,
+                    headers: {
 
-                    "Authorization":
-                        `Bearer ${SUPABASE_KEY}`,
+                        "apikey":
+                            SUPABASE_KEY,
 
-                    "Content-Type":
-                        "application/json"
+                        "Authorization":
+                            `Bearer ${SUPABASE_KEY}`,
+
+                        "Accept":
+                            "application/json",
+
+                        "Cache-Control":
+                            "no-cache"
+
+                    }
 
                 }
-
-            }
-        );
+            );
 
 
         if (!response.ok) {
@@ -310,34 +516,23 @@ async function loadProjects() {
         }
 
 
-        const projects =
+        const data =
             await response.json();
 
 
-        if (!Array.isArray(projects)) {
-
-            throw new Error(
-                "Invalid projects response."
-            );
-
-        }
-
-
-        allProjects = projects;
+        projects =
+            Array.isArray(data)
+                ? data
+                : [];
 
 
         console.log(
             "Projects loaded:",
-            allProjects
+            projects
         );
 
 
-        renderProjects(
-            allProjects
-        );
-
-
-        setupPortfolioFilters();
+        renderProjects(projects);
 
 
     } catch (error) {
@@ -359,39 +554,12 @@ async function loadProjects() {
                 </h3>
 
                 <p>
-                    Please check your Supabase
-                    connection and try again.
+                    Please refresh the page and try again.
                 </p>
-
-                <button
-                    type="button"
-                    id="retryProjects">
-
-                    <i class="fa-solid fa-rotate"></i>
-
-                    Try Again
-
-                </button>
 
             </div>
 
         `;
-
-
-        const retryButton =
-            document.getElementById(
-                "retryProjects"
-            );
-
-
-        if (retryButton) {
-
-            retryButton.addEventListener(
-                "click",
-                loadProjects
-            );
-
-        }
 
     }
 
@@ -402,12 +570,19 @@ async function loadProjects() {
    RENDER PROJECTS
 ========================================================= */
 
-function renderProjects(projects) {
+function renderProjects(projectList) {
 
-    if (!portfolioGrid) return;
+    if (!portfolioGrid) {
+        return;
+    }
 
 
-    if (!projects.length) {
+    /* NO PROJECTS */
+
+    if (
+        !Array.isArray(projectList) ||
+        projectList.length === 0
+    ) {
 
         portfolioGrid.innerHTML = `
 
@@ -420,7 +595,7 @@ function renderProjects(projects) {
                 </h3>
 
                 <p>
-                    Projects will appear here soon.
+                    Projects will appear here.
                 </p>
 
             </div>
@@ -432,8 +607,16 @@ function renderProjects(projects) {
     }
 
 
+    /* CREATE CARDS */
+
     portfolioGrid.innerHTML =
-        projects.map(project => {
+        projectList.map(project => {
+
+            const id =
+                escapeAttribute(
+                    String(project.id || "")
+                );
+
 
             const title =
                 escapeHTML(
@@ -456,10 +639,12 @@ function renderProjects(projects) {
                 );
 
 
-            const projectURL =
+            const categoryValue =
                 escapeAttribute(
-                    project.project_url ||
-                    "#"
+                    String(
+                        project.category ||
+                        ""
+                    ).toLowerCase()
                 );
 
 
@@ -467,47 +652,50 @@ function renderProjects(projects) {
 
                 <article
                     class="portfolio-card"
-                    data-category="${category.toLowerCase()}">
+                    data-project-id="${id}"
+                    data-category="${categoryValue}"
+                    tabindex="0"
+                    role="button"
+                    aria-label="View ${title}"
+                >
 
-                    <img
-                        src="${image}"
-                        alt="${title}"
-                        loading="lazy"
-                        onerror="this.style.display='none';">
+                    <div class="portfolio-image">
+
+                        <img
+                            src="${image}"
+                            alt="${title}"
+                            loading="lazy"
+                        >
+
+                    </div>
+
 
                     <div class="overlay">
+
+                        <span
+                            class="portfolio-category"
+                        >
+                            ${category}
+                        </span>
+
 
                         <h3>
                             ${title}
                         </h3>
 
-                        <p>
-                            ${category}
-                        </p>
 
-                        ${
-                            project.project_url &&
-                            project.project_url !== "#"
+                        <button
+                            type="button"
+                            class="project-preview-btn"
+                        >
 
-                            ?
+                            View Project
 
-                            `
-                            <a
-                                href="${projectURL}"
-                                target="_blank"
-                                rel="noopener noreferrer">
+                            <i
+                                class="fa-solid fa-arrow-right"
+                            ></i>
 
-                                View Project
-
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-                            </a>
-                            `
-
-                            :
-
-                            ""
-                        }
+                        </button>
 
                     </div>
 
@@ -518,7 +706,132 @@ function renderProjects(projects) {
         }).join("");
 
 
-    initializePortfolioReveal();
+    setupProjectCards();
+
+    revealOnScroll();
+
+}
+
+
+/* =========================================================
+   PROJECT CARD EVENTS
+========================================================= */
+
+function setupProjectCards() {
+
+    if (!portfolioGrid) {
+        return;
+    }
+
+
+    const cards =
+        portfolioGrid.querySelectorAll(
+            ".portfolio-card"
+        );
+
+
+    cards.forEach(card => {
+
+        /* CLICK */
+
+        card.addEventListener(
+            "click",
+            event => {
+
+                /*
+                 * Prevent unwanted behaviour
+                 * when clicking inside the modal
+                 * or other elements.
+                 */
+
+                event.preventDefault();
+
+
+                const projectId =
+                    card.dataset.projectId;
+
+
+                if (!projectId) {
+                    return;
+                }
+
+
+                const project =
+                    projects.find(
+                        item =>
+                            String(item.id) ===
+                            String(projectId)
+                    );
+
+
+                if (!project) {
+
+                    console.warn(
+                        "Project not found:",
+                        projectId
+                    );
+
+                    return;
+
+                }
+
+
+                openProjectModal(
+                    project
+                );
+
+            }
+        );
+
+
+        /* KEYBOARD */
+
+        card.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key !== "Enter" &&
+                    event.key !== " "
+                ) {
+
+                    return;
+
+                }
+
+
+                event.preventDefault();
+
+
+                const projectId =
+                    card.dataset.projectId;
+
+
+                if (!projectId) {
+                    return;
+                }
+
+
+                const project =
+                    projects.find(
+                        item =>
+                            String(item.id) ===
+                            String(projectId)
+                    );
+
+
+                if (project) {
+
+                    openProjectModal(
+                        project
+                    );
+
+                }
+
+            }
+        );
+
+    });
 
 }
 
@@ -529,91 +842,82 @@ function renderProjects(projects) {
 
 function setupPortfolioFilters() {
 
-    if (!filterButtons.length) return;
+    const filterBtns =
+        document.querySelectorAll(
+            ".portfolio-filter button"
+        );
 
 
-    filterButtons.forEach(button => {
+    filterBtns.forEach(button => {
 
         /*
-           Prevent adding the same event
-           listener multiple times.
-        */
+         * onclick prevents duplicate
+         * listeners after re-render.
+         */
 
-        if (button.dataset.listenerAdded) {
-            return;
-        }
+        button.onclick = () => {
+
+            /* ACTIVE BUTTON */
+
+            filterBtns.forEach(btn => {
+
+                btn.classList.remove(
+                    "active"
+                );
+
+            });
 
 
-        button.dataset.listenerAdded = "true";
+            button.classList.add(
+                "active"
+            );
 
 
-        button.addEventListener(
-            "click",
-            () => {
+            const filter =
+                button.textContent
+                    .trim()
+                    .toLowerCase();
 
-                filterButtons.forEach(btn => {
 
-                    btn.classList.remove(
-                        "active"
+            /* ALL */
+
+            if (
+                filter === "all"
+            ) {
+
+                renderProjects(
+                    projects
+                );
+
+                return;
+
+            }
+
+
+            /* FILTER PROJECTS */
+
+            const filteredProjects =
+                projects.filter(project => {
+
+                    const category =
+                        String(
+                            project.category ||
+                            ""
+                        ).toLowerCase();
+
+
+                    return category.includes(
+                        filter
                     );
 
                 });
 
 
-                button.classList.add(
-                    "active"
-                );
+            renderProjects(
+                filteredProjects
+            );
 
-
-                const filter =
-                    (
-                        button.dataset.filter ||
-                        button.textContent
-                    )
-                    .toLowerCase()
-                    .trim();
-
-
-                if (
-                    filter === "all"
-                ) {
-
-                    renderProjects(
-                        allProjects
-                    );
-
-                    return;
-
-                }
-
-
-                const filteredProjects =
-                    allProjects.filter(
-                        project => {
-
-                            const category =
-                                String(
-                                    project.category ||
-                                    ""
-                                )
-                                .toLowerCase()
-                                .trim();
-
-
-                            return category.includes(
-                                filter
-                            );
-
-                        }
-                    );
-
-
-                renderProjects(
-                    filteredProjects
-                );
-
-            }
-        );
+        };
 
     });
 
@@ -664,159 +968,107 @@ function escapeAttribute(value) {
 
 
 /* =========================================================
-   PORTFOLIO SCROLL REVEAL
+   SCROLL REVEAL
 ========================================================= */
 
-function initializePortfolioReveal() {
+function revealOnScroll() {
 
-    const cards =
+    const elements =
         document.querySelectorAll(
-            ".portfolio-card"
+
+            ".service-card, " +
+            ".skill-card, " +
+            ".process-card, " +
+            ".portfolio-card, " +
+            ".testimonial-card, " +
+            ".about-image, " +
+            ".about-content"
+
         );
 
 
-    const reveal = () => {
-
-        const trigger =
-            window.innerHeight * 0.88;
+    const triggerBottom =
+        window.innerHeight * 0.85;
 
 
-        cards.forEach(card => {
+    elements.forEach(element => {
 
-            const top =
-                card.getBoundingClientRect()
-                    .top;
-
-
-            if (top < trigger) {
-
-                card.classList.add(
-                    "show"
-                );
-
-            }
-
-        });
-
-    };
+        const top =
+            element.getBoundingClientRect().top;
 
 
-    reveal();
+        if (
+            top < triggerBottom
+        ) {
 
-}
-
-
-/* =========================================================
-   GENERAL SCROLL REVEAL
-========================================================= */
-
-const generalRevealElements =
-    document.querySelectorAll(
-        `
-        .service-card,
-        .skill-card,
-        .process-card,
-        .testimonial-card,
-        .about-image,
-        .about-content
-        `
-    );
-
-
-function revealGeneralElements() {
-
-    const trigger =
-        window.innerHeight * 0.88;
-
-
-    generalRevealElements.forEach(
-        element => {
-
-            const top =
-                element
-                    .getBoundingClientRect()
-                    .top;
-
-
-            if (top < trigger) {
-
-                element.classList.add(
-                    "show"
-                );
-
-            }
+            element.classList.add(
+                "show"
+            );
 
         }
-    );
+
+    });
 
 }
 
 
 window.addEventListener(
     "scroll",
-    revealGeneralElements
+    revealOnScroll
 );
-
-revealGeneralElements();
 
 
 /* =========================================================
-   HEADER SHRINK
+   HEADER SCROLL
 ========================================================= */
 
 const header =
     document.getElementById("header");
 
 
-if (header) {
+window.addEventListener(
+    "scroll",
+    () => {
 
-    window.addEventListener(
-        "scroll",
-        () => {
-
-            if (
-                window.scrollY > 80
-            ) {
-
-                header.classList.add(
-                    "scrolled"
-                );
-
-            } else {
-
-                header.classList.remove(
-                    "scrolled"
-                );
-
-            }
-
+        if (!header) {
+            return;
         }
-    );
-
-}
 
 
-/* =========================================================
-   HERO NAME
-========================================================= */
+        header.classList.toggle(
+            "scrolled",
+            window.scrollY > 80
+        );
 
-const heroName =
-    document.querySelector(
-        ".hero h1"
-    );
-
-
-if (heroName) {
-
-    heroName.classList.add(
-        "hero-name-visible"
-    );
-
-}
+    }
+);
 
 
 /* =========================================================
-   START WEBSITE
+   INITIALIZE
 ========================================================= */
 
-loadProjects();
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        /*
+         * Load the portfolio from Supabase.
+         */
+
+        loadProjects();
+
+
+        /*
+         * Setup filters immediately.
+         * They will also be refreshed after
+         * projects are rendered.
+         */
+
+        setupPortfolioFilters();
+
+
+        revealOnScroll();
+
+    }
+);

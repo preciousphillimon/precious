@@ -1654,3 +1654,151 @@ img {
     }
 
 }
+
+/* =========================================================
+   DELETE CONFIRMATION MODAL
+========================================================= */
+
+.delete-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 99999;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: 0.25s ease;
+}
+
+.delete-modal.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.delete-modal-box {
+    width: 100%;
+    max-width: 420px;
+
+    background: #141a2a;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 18px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+
+    transform: translateY(20px) scale(0.96);
+
+    transition: 0.25s ease;
+}
+
+.delete-modal.active .delete-modal-box {
+    transform: translateY(0) scale(1);
+}
+
+.delete-modal-icon {
+    width: 65px;
+    height: 65px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255, 70, 70, 0.12);
+
+    color: #ff5555;
+
+    font-size: 25px;
+}
+
+.delete-modal-box h2 {
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.delete-modal-box p {
+    color: #aab0bc;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.delete-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.cancel-delete,
+.confirm-delete {
+    flex: 1;
+
+    border: none;
+
+    padding: 12px 18px;
+
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.cancel-delete {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+}
+
+.cancel-delete:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.confirm-delete {
+    background: #ff4d4d;
+    color: #fff;
+}
+
+.confirm-delete:hover {
+    background: #e63b3b;
+    transform: translateY(-2px);
+}
+
+.confirm-delete:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+
+    .delete-modal-box {
+        padding: 25px 20px;
+    }
+
+    .delete-modal-actions {
+        flex-direction: column;
+    }
+
+}
