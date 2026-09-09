@@ -1,3 +1,5 @@
+
+
 /* =========================================================
    SUPABASE CONFIG
 ========================================================= */
@@ -10,25 +12,44 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
    ELEMENTS
 ========================================================= */
 
-const sidebar = document.getElementById("sidebar");
-const sidebarToggle = document.getElementById("sidebarToggle");
-const sidebarOverlay = document.getElementById("sidebarOverlay");
+const sidebar =
+    document.getElementById("sidebar");
 
-const projectForm = document.getElementById("projectForm");
+const sidebarToggle =
+    document.getElementById("sidebarToggle");
 
-const dropZone = document.getElementById("dropZone");
-const fileInput = document.getElementById("fileInput");
+const sidebarOverlay =
+    document.getElementById("sidebarOverlay");
+
+const projectForm =
+    document.getElementById("projectForm");
+
+const dropZone =
+    document.getElementById("dropZone");
+
+const fileInput =
+    document.getElementById("fileInput");
 
 const previewContainer =
     document.getElementById("previewContainer");
 
-const preview = document.getElementById("preview");
-const removeImage = document.getElementById("removeImage");
+const preview =
+    document.getElementById("preview");
 
-const titleInput = document.getElementById("title");
-const categoryInput = document.getElementById("category");
-const linkInput = document.getElementById("link");
-const imageInput = document.getElementById("image");
+const removeImage =
+    document.getElementById("removeImage");
+
+const titleInput =
+    document.getElementById("title");
+
+const categoryInput =
+    document.getElementById("category");
+
+const linkInput =
+    document.getElementById("link");
+
+const imageInput =
+    document.getElementById("image");
 
 const submitProject =
     document.getElementById("submitProject");
@@ -42,9 +63,6 @@ const formMessage =
 const projectsList =
     document.getElementById("projectsList");
 
-const emptyProjects =
-    document.getElementById("emptyProjects");
-
 const projectSearch =
     document.getElementById("projectSearch");
 
@@ -53,11 +71,28 @@ const projectFilter =
 
 
 /* =========================================================
+   DELETE MODAL ELEMENTS
+========================================================= */
+
+const deleteModal =
+    document.getElementById("deleteModal");
+
+const cancelDelete =
+    document.getElementById("cancelDelete");
+
+const confirmDelete =
+    document.getElementById("confirmDelete");
+
+
+/* =========================================================
    STATE
 ========================================================= */
 
 let projects = [];
+
 let uploadedImageUrl = "";
+
+let projectToDelete = null;
 
 
 /* =========================================================
@@ -67,6 +102,7 @@ let uploadedImageUrl = "";
 function openSidebar() {
 
     sidebar?.classList.add("active");
+
     sidebarOverlay?.classList.add("active");
 
 }
@@ -75,6 +111,7 @@ function openSidebar() {
 function closeSidebar() {
 
     sidebar?.classList.remove("active");
+
     sidebarOverlay?.classList.remove("active");
 
 }
@@ -84,10 +121,16 @@ sidebarToggle?.addEventListener(
     "click",
     () => {
 
-        if (sidebar?.classList.contains("active")) {
+        if (
+            sidebar?.classList.contains("active")
+        ) {
+
             closeSidebar();
+
         } else {
+
             openSidebar();
+
         }
 
     }
@@ -100,85 +143,124 @@ sidebarOverlay?.addEventListener(
 );
 
 
-document.querySelectorAll(".nav-item").forEach(link => {
+document
+    .querySelectorAll(".nav-item")
+    .forEach(link => {
 
-    link.addEventListener("click", () => {
+        link.addEventListener(
+            "click",
+            () => {
 
-        document
-            .querySelectorAll(".nav-item")
-            .forEach(item =>
-                item.classList.remove("active")
-            );
+                document
+                    .querySelectorAll(".nav-item")
+                    .forEach(item => {
 
-        link.classList.add("active");
+                        item.classList.remove(
+                            "active"
+                        );
 
-        closeSidebar();
+                    });
+
+                link.classList.add("active");
+
+                closeSidebar();
+
+            }
+        );
 
     });
-
-});
 
 
 /* =========================================================
    IMAGE UPLOAD
 ========================================================= */
 
-dropZone?.addEventListener("click", () => {
+dropZone?.addEventListener(
+    "click",
+    () => {
 
-    fileInput?.click();
+        fileInput?.click();
 
-});
-
-
-fileInput?.addEventListener("change", event => {
-
-    const file = event.target.files[0];
-
-    if (file) {
-        uploadImage(file);
     }
-
-});
-
-
-dropZone?.addEventListener("dragover", event => {
-
-    event.preventDefault();
-
-    dropZone.classList.add("dragging");
-
-});
+);
 
 
-dropZone?.addEventListener("dragleave", () => {
+fileInput?.addEventListener(
+    "change",
+    event => {
 
-    dropZone.classList.remove("dragging");
+        const file =
+            event.target.files?.[0];
 
-});
+        if (file) {
 
+            uploadImage(file);
 
-dropZone?.addEventListener("drop", event => {
+        }
 
-    event.preventDefault();
-
-    dropZone.classList.remove("dragging");
-
-    const file = event.dataTransfer.files[0];
-
-    if (file) {
-        uploadImage(file);
     }
+);
 
-});
+
+dropZone?.addEventListener(
+    "dragover",
+    event => {
+
+        event.preventDefault();
+
+        dropZone.classList.add(
+            "dragging"
+        );
+
+    }
+);
+
+
+dropZone?.addEventListener(
+    "dragleave",
+    () => {
+
+        dropZone.classList.remove(
+            "dragging"
+        );
+
+    }
+);
+
+
+dropZone?.addEventListener(
+    "drop",
+    event => {
+
+        event.preventDefault();
+
+        dropZone.classList.remove(
+            "dragging"
+        );
+
+        const file =
+            event.dataTransfer.files?.[0];
+
+        if (file) {
+
+            uploadImage(file);
+
+        }
+
+    }
+);
 
 
 /* =========================================================
-   UPLOAD IMAGE TO SUPABASE STORAGE
+   UPLOAD IMAGE
 ========================================================= */
 
 async function uploadImage(file) {
 
-    if (!file.type.startsWith("image/")) {
+    if (
+        !file ||
+        !file.type.startsWith("image/")
+    ) {
 
         showMessage(
             "Please select a valid image.",
@@ -190,7 +272,9 @@ async function uploadImage(file) {
     }
 
 
-    const maxSize = 5 * 1024 * 1024;
+    const maxSize =
+        5 * 1024 * 1024;
+
 
     if (file.size > maxSize) {
 
@@ -204,11 +288,17 @@ async function uploadImage(file) {
     }
 
 
-    dropZone.classList.add("uploading");
+    dropZone?.classList.add(
+        "uploading"
+    );
 
 
     const extension =
-        file.name.split(".").pop();
+        file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
 
     const fileName =
         `${Date.now()}-${Math.random()
@@ -218,32 +308,46 @@ async function uploadImage(file) {
 
     try {
 
-        const response = await fetch(
+        const response =
+            await fetch(
 
-            `${SUPABASE_URL}/storage/v1/object/project-images/${fileName}`,
+                `${SUPABASE_URL}/storage/v1/object/project-images/${fileName}`,
 
-            {
-                method: "POST",
+                {
+                    method: "POST",
 
-                headers: {
-                    apikey: SUPABASE_KEY,
-                    Authorization:
-                        `Bearer ${SUPABASE_KEY}`,
-                    "Content-Type": file.type
-                },
+                    headers: {
 
-                body: file
-            }
+                        apikey:
+                            SUPABASE_KEY,
 
-        );
+                        Authorization:
+                            `Bearer ${SUPABASE_KEY}`,
+
+                        "Content-Type":
+                            file.type,
+
+                        "x-upsert":
+                            "false"
+
+                    },
+
+                    body: file
+
+                }
+
+            );
 
 
         if (!response.ok) {
 
-            const error =
+            const errorText =
                 await response.text();
 
-            console.error(error);
+            console.error(
+                "Storage upload error:",
+                errorText
+            );
 
             throw new Error(
                 "Image upload failed."
@@ -256,19 +360,33 @@ async function uploadImage(file) {
             `${SUPABASE_URL}/storage/v1/object/public/project-images/${fileName}`;
 
 
-        imageInput.value =
-            uploadedImageUrl;
+        if (imageInput) {
+
+            imageInput.value =
+                uploadedImageUrl;
+
+        }
 
 
-        preview.src =
-            uploadedImageUrl;
+        if (preview) {
+
+            preview.src =
+                uploadedImageUrl;
+
+        }
 
 
-        previewContainer.hidden =
-            false;
+        if (previewContainer) {
+
+            previewContainer.hidden =
+                false;
+
+        }
 
 
-        dropZone.classList.add("uploaded");
+        dropZone?.classList.add(
+            "uploaded"
+        );
 
 
         showMessage(
@@ -279,16 +397,23 @@ async function uploadImage(file) {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Image upload error:",
+            error
+        );
+
 
         showMessage(
-            "Image upload failed. Check Storage policies.",
+            "Image upload failed. Check your Storage policies.",
             "error"
         );
 
+
     } finally {
 
-        dropZone.classList.remove("uploading");
+        dropZone?.classList.remove(
+            "uploading"
+        );
 
     }
 
@@ -301,7 +426,15 @@ async function uploadImage(file) {
 
 removeImage?.addEventListener(
     "click",
-    removeUploadedImage
+    event => {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+        removeUploadedImage();
+
+    }
 );
 
 
@@ -309,15 +442,39 @@ function removeUploadedImage() {
 
     uploadedImageUrl = "";
 
-    imageInput.value = "";
 
-    preview.src = "";
+    if (imageInput) {
 
-    previewContainer.hidden = true;
+        imageInput.value = "";
 
-    dropZone.classList.remove("uploaded");
+    }
 
-    fileInput.value = "";
+
+    if (preview) {
+
+        preview.src = "";
+
+    }
+
+
+    if (previewContainer) {
+
+        previewContainer.hidden =
+            true;
+
+    }
+
+
+    dropZone?.classList.remove(
+        "uploaded"
+    );
+
+
+    if (fileInput) {
+
+        fileInput.value = "";
+
+    }
 
 }
 
@@ -334,18 +491,24 @@ projectForm?.addEventListener(
 
 
         const title =
-            titleInput.value.trim();
+            titleInput?.value.trim() || "";
+
 
         const category =
-            categoryInput.value.trim();
+            categoryInput?.value.trim() || "";
+
 
         const projectUrl =
-            linkInput.value.trim();
+            linkInput?.value.trim() || "";
+
 
         const imageUrl =
             uploadedImageUrl ||
-            imageInput.value.trim();
+            imageInput?.value.trim() ||
+            "";
 
+
+        /* VALIDATION */
 
         if (!title) {
 
@@ -353,6 +516,8 @@ projectForm?.addEventListener(
                 "Please enter a project title.",
                 "error"
             );
+
+            titleInput?.focus();
 
             return;
 
@@ -365,6 +530,8 @@ projectForm?.addEventListener(
                 "Please select a category.",
                 "error"
             );
+
+            categoryInput?.focus();
 
             return;
 
@@ -383,11 +550,16 @@ projectForm?.addEventListener(
         }
 
 
+        if (!submitProject) return;
+
+
         const originalButton =
             submitProject.innerHTML;
 
 
-        submitProject.disabled = true;
+        submitProject.disabled =
+            true;
+
 
         submitProject.innerHTML = `
             <i class="fa-solid fa-spinner fa-spin"></i>
@@ -397,16 +569,20 @@ projectForm?.addEventListener(
 
         const project = {
 
-            title: title,
+            title:
+                title,
 
-            category: category,
+            category:
+                category,
 
-            image_url: imageUrl,
+            image_url:
+                imageUrl,
 
             project_url:
                 projectUrl || null,
 
-            featured: false
+            featured:
+                false
 
         };
 
@@ -415,11 +591,16 @@ projectForm?.addEventListener(
 
             const response =
                 await fetch(
+
                     `${SUPABASE_URL}/rest/v1/projects`,
+
                     {
-                        method: "POST",
+
+                        method:
+                            "POST",
 
                         headers: {
+
                             "Content-Type":
                                 "application/json",
 
@@ -431,20 +612,26 @@ projectForm?.addEventListener(
 
                             Prefer:
                                 "return=representation"
+
                         },
 
                         body:
                             JSON.stringify(project)
+
                     }
+
                 );
 
 
             if (!response.ok) {
 
-                const error =
+                const errorText =
                     await response.text();
 
-                console.error(error);
+                console.error(
+                    "Supabase insert error:",
+                    errorText
+                );
 
                 throw new Error(
                     "Project could not be added."
@@ -461,21 +648,28 @@ projectForm?.addEventListener(
 
             resetProjectForm();
 
+
             await loadProjects();
 
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "Add project error:",
+                error
+            );
+
 
             showMessage(
                 "Could not add project.",
                 "error"
             );
 
+
         } finally {
 
-            submitProject.disabled = false;
+            submitProject.disabled =
+                false;
 
             submitProject.innerHTML =
                 originalButton;
@@ -492,37 +686,99 @@ projectForm?.addEventListener(
 
 async function loadProjects() {
 
-    if (!projectsList) return;
+    if (!projectsList) {
+
+        console.warn(
+            "projectsList was not found."
+        );
+
+        return;
+
+    }
+
+
+    projectsList.innerHTML = `
+        <div class="empty-projects">
+
+            <div class="empty-icon">
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+            </div>
+
+            <h3>
+                Loading Projects...
+            </h3>
+
+            <p>
+                Please wait.
+            </p>
+
+        </div>
+    `;
 
 
     try {
 
         const response =
             await fetch(
+
                 `${SUPABASE_URL}/rest/v1/projects?select=*&order=created_at.desc`,
+
                 {
+
+                    method:
+                        "GET",
+
+                    cache:
+                        "no-store",
+
                     headers: {
+
                         apikey:
                             SUPABASE_KEY,
 
                         Authorization:
-                            `Bearer ${SUPABASE_KEY}`
+                            `Bearer ${SUPABASE_KEY}`,
+
+                        Accept:
+                            "application/json",
+
+                        "Cache-Control":
+                            "no-cache"
+
                     }
+
                 }
+
             );
 
 
         if (!response.ok) {
 
+            const errorText =
+                await response.text();
+
+            console.error(
+                "Load projects error:",
+                errorText
+            );
+
             throw new Error(
-                "Could not load projects."
+                `Could not load projects: ${response.status}`
             );
 
         }
 
 
-        projects =
+        const data =
             await response.json();
+
+
+        projects =
+            Array.isArray(data)
+                ? data
+                : [];
 
 
         updateDashboard();
@@ -532,13 +788,20 @@ async function loadProjects() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Project loading error:",
+            error
+        );
+
 
         projectsList.innerHTML = `
+
             <div class="empty-projects">
 
                 <div class="empty-icon">
+
                     <i class="fa-solid fa-circle-exclamation"></i>
+
                 </div>
 
                 <h3>
@@ -546,10 +809,12 @@ async function loadProjects() {
                 </h3>
 
                 <p>
-                    Check your Supabase connection.
+                    Check your Supabase connection
+                    and RLS policies.
                 </p>
 
             </div>
+
         `;
 
     }
@@ -568,47 +833,84 @@ function updateDashboard() {
 
 
     const design =
-        projects.filter(project =>
-            project.category?.toLowerCase() === "design"
+        projects.filter(
+            project =>
+                String(
+                    project.category || ""
+                ).toLowerCase() === "design"
         ).length;
 
 
     const video =
-        projects.filter(project =>
-            project.category?.toLowerCase() === "video"
+        projects.filter(
+            project =>
+                String(
+                    project.category || ""
+                ).toLowerCase() === "video"
         ).length;
 
 
     const featured =
-        projects.filter(project =>
-            project.featured === true
+        projects.filter(
+            project =>
+                project.featured === true
         ).length;
 
 
     const totalElement =
-        document.getElementById("totalProjects");
+        document.getElementById(
+            "totalProjects"
+        );
+
 
     const designElement =
-        document.getElementById("designProjects");
+        document.getElementById(
+            "designProjects"
+        );
+
 
     const videoElement =
-        document.getElementById("videoProjects");
+        document.getElementById(
+            "videoProjects"
+        );
+
 
     const featuredElement =
-        document.getElementById("featuredProjects");
+        document.getElementById(
+            "featuredProjects"
+        );
 
 
-    if (totalElement)
-        totalElement.textContent = total;
+    if (totalElement) {
 
-    if (designElement)
-        designElement.textContent = design;
+        totalElement.textContent =
+            total;
 
-    if (videoElement)
-        videoElement.textContent = video;
+    }
 
-    if (featuredElement)
-        featuredElement.textContent = featured;
+
+    if (designElement) {
+
+        designElement.textContent =
+            design;
+
+    }
+
+
+    if (videoElement) {
+
+        videoElement.textContent =
+            video;
+
+    }
+
+
+    if (featuredElement) {
+
+        featuredElement.textContent =
+            featured;
+
+    }
 
 }
 
@@ -629,17 +931,24 @@ function renderProjects() {
 
 
     const filter =
-        projectFilter?.value || "all";
+        projectFilter?.value
+            ?.trim()
+            .toLowerCase() || "all";
 
 
     const filtered =
         projects.filter(project => {
 
             const title =
-                project.title?.toLowerCase() || "";
+                String(
+                    project.title || ""
+                ).toLowerCase();
+
 
             const category =
-                project.category?.toLowerCase() || "";
+                String(
+                    project.category || ""
+                ).toLowerCase();
 
 
             const matchesSearch =
@@ -649,7 +958,7 @@ function renderProjects() {
 
             const matchesCategory =
                 filter === "all" ||
-                category === filter.toLowerCase();
+                category === filter;
 
 
             return (
@@ -663,10 +972,13 @@ function renderProjects() {
     if (!filtered.length) {
 
         projectsList.innerHTML = `
+
             <div class="empty-projects">
 
                 <div class="empty-icon">
+
                     <i class="fa-solid fa-folder-open"></i>
+
                 </div>
 
                 <h3>
@@ -678,6 +990,7 @@ function renderProjects() {
                 </p>
 
             </div>
+
         `;
 
         return;
@@ -686,7 +999,9 @@ function renderProjects() {
 
 
     projectsList.innerHTML =
-        filtered.map(createProjectCard).join("");
+        filtered
+            .map(createProjectCard)
+            .join("");
 
 }
 
@@ -698,23 +1013,45 @@ function renderProjects() {
 function createProjectCard(project) {
 
     const image =
-        escapeHTML(project.image_url || "");
+        escapeHTML(
+            project.image_url || ""
+        );
+
 
     const title =
-        escapeHTML(project.title || "Untitled");
+        escapeHTML(
+            project.title ||
+            "Untitled"
+        );
+
 
     const category =
-        escapeHTML(project.category || "Other");
+        escapeHTML(
+            project.category ||
+            "Other"
+        );
+
 
     const link =
-        escapeHTML(project.project_url || "#");
+        escapeHTML(
+            project.project_url ||
+            "#"
+        );
+
+
+    const projectId =
+        escapeHTML(
+            String(
+                project.id
+            )
+        );
 
 
     return `
 
         <article
             class="admin-project-card"
-            data-id="${project.id}"
+            data-id="${projectId}"
         >
 
             <div class="project-image">
@@ -763,7 +1100,7 @@ function createProjectCard(project) {
                     <button
                         type="button"
                         class="project-delete"
-                        data-id="${project.id}"
+                        data-id="${projectId}"
                     >
 
                         <i class="fa-solid fa-trash"></i>
@@ -784,12 +1121,12 @@ function createProjectCard(project) {
 
 
 /* =========================================================
-   DELETE PROJECT
+   OPEN DELETE MODAL
 ========================================================= */
 
 projectsList?.addEventListener(
     "click",
-    async event => {
+    event => {
 
         const deleteButton =
             event.target.closest(
@@ -800,49 +1137,282 @@ projectsList?.addEventListener(
         if (!deleteButton) return;
 
 
-        const id =
+        const projectId =
             deleteButton.dataset.id;
 
 
-        const confirmed =
-            confirm(
-                "Are you sure you want to delete this project?"
+        if (!projectId) {
+
+            console.error(
+                "Delete button has no project ID."
             );
 
+            return;
 
-        if (!confirmed) return;
+        }
 
 
-        deleteButton.disabled = true;
+        projectToDelete =
+            projectId;
+
+
+        if (!deleteModal) {
+
+            console.error(
+                "deleteModal was not found in admin.html."
+            );
+
+            return;
+
+        }
+
+
+        deleteModal.classList.add(
+            "active"
+        );
+
+
+        deleteModal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   CANCEL DELETE
+========================================================= */
+
+cancelDelete?.addEventListener(
+    "click",
+    () => {
+
+        closeDeleteModal();
+
+    }
+);
+
+
+/* =========================================================
+   CLOSE DELETE MODAL
+========================================================= */
+
+function closeDeleteModal() {
+
+    if (deleteModal) {
+
+        deleteModal.classList.remove(
+            "active"
+        );
+
+
+        deleteModal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    projectToDelete =
+        null;
+
+}
+
+
+/* =========================================================
+   CLICK OUTSIDE MODAL
+========================================================= */
+
+deleteModal?.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            deleteModal
+        ) {
+
+            closeDeleteModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape" &&
+            deleteModal?.classList.contains(
+                "active"
+            )
+        ) {
+
+            closeDeleteModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   CONFIRM DELETE
+========================================================= */
+
+confirmDelete?.addEventListener(
+    "click",
+    async () => {
+
+        if (!projectToDelete) {
+
+            return;
+
+        }
+
+
+        const id =
+            projectToDelete;
+
+
+        const originalButton =
+            confirmDelete.innerHTML;
+
+
+        confirmDelete.disabled =
+            true;
+
+
+        confirmDelete.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Deleting...
+        `;
 
 
         try {
 
             const response =
                 await fetch(
-                    `${SUPABASE_URL}/rest/v1/projects?id=eq.${id}`,
+
+                    `${SUPABASE_URL}/rest/v1/projects?id=eq.${encodeURIComponent(id)}`,
+
                     {
-                        method: "DELETE",
+
+                        method:
+                            "DELETE",
 
                         headers: {
+
                             apikey:
                                 SUPABASE_KEY,
 
                             Authorization:
-                                `Bearer ${SUPABASE_KEY}`
+                                `Bearer ${SUPABASE_KEY}`,
+
+                            Prefer:
+                                "return=representation"
+
                         }
+
                     }
+
                 );
 
 
             if (!response.ok) {
 
+                const errorText =
+                    await response.text();
+
+                console.error(
+                    "Delete error:",
+                    errorText
+                );
+
                 throw new Error(
-                    "Delete failed."
+                    `Delete failed: ${response.status}`
                 );
 
             }
 
+
+            /*
+             * Check whether Supabase actually
+             * deleted a row.
+             */
+
+            let deletedRows = [];
+
+
+            try {
+
+                deletedRows =
+                    await response.json();
+
+            } catch {
+
+                deletedRows = [];
+
+            }
+
+
+            /*
+             * If return=representation
+             * returned zero rows, the DELETE
+             * policy may be blocking the operation.
+             */
+
+            if (
+                Array.isArray(
+                    deletedRows
+                ) &&
+                deletedRows.length === 0
+            ) {
+
+                console.warn(
+                    "Delete returned zero rows."
+                );
+
+            }
+
+
+            /* REMOVE FROM LOCAL ARRAY */
+
+            projects =
+                projects.filter(
+                    project =>
+                        String(
+                            project.id
+                        ) !== String(id)
+                );
+
+
+            /* UPDATE DASHBOARD */
+
+            updateDashboard();
+
+
+            /* UPDATE PROJECT LIST */
+
+            renderProjects();
+
+
+            /* CLOSE MODAL */
+
+            closeDeleteModal();
+
+
+            /* SUCCESS */
 
             showMessage(
                 "Project deleted successfully.",
@@ -850,21 +1420,28 @@ projectsList?.addEventListener(
             );
 
 
-            await loadProjects();
-
-
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "Delete project error:",
+                error
+            );
+
 
             showMessage(
-                "Could not delete project.",
+                "Could not delete project. Check your Supabase DELETE policy.",
                 "error"
             );
 
 
-            deleteButton.disabled =
+        } finally {
+
+            confirmDelete.disabled =
                 false;
+
+
+            confirmDelete.innerHTML =
+                originalButton;
 
         }
 
@@ -878,7 +1455,11 @@ projectsList?.addEventListener(
 
 projectSearch?.addEventListener(
     "input",
-    renderProjects
+    () => {
+
+        renderProjects();
+
+    }
 );
 
 
@@ -888,7 +1469,11 @@ projectSearch?.addEventListener(
 
 projectFilter?.addEventListener(
     "change",
-    renderProjects
+    () => {
+
+        renderProjects();
+
+    }
 );
 
 
@@ -900,21 +1485,28 @@ resetForm?.addEventListener(
     "click",
     () => {
 
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            removeUploadedImage();
+                removeUploadedImage();
 
-            hideMessage();
+                hideMessage();
 
-        }, 50);
+            },
+            50
+        );
 
     }
 );
 
 
+/* =========================================================
+   RESET PROJECT FORM
+========================================================= */
+
 function resetProjectForm() {
 
-    projectForm.reset();
+    projectForm?.reset();
 
     removeUploadedImage();
 
@@ -925,12 +1517,17 @@ function resetProjectForm() {
    MESSAGE
 ========================================================= */
 
-function showMessage(message, type) {
+function showMessage(
+    message,
+    type
+) {
 
     if (!formMessage) return;
 
 
-    formMessage.hidden = false;
+    formMessage.hidden =
+        false;
+
 
     formMessage.textContent =
         message;
@@ -940,11 +1537,14 @@ function showMessage(message, type) {
         `form-message ${type}`;
 
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        hideMessage();
+            hideMessage();
 
-    }, 4000);
+        },
+        4000
+    );
 
 }
 
@@ -953,9 +1553,13 @@ function hideMessage() {
 
     if (!formMessage) return;
 
-    formMessage.hidden = true;
 
-    formMessage.textContent = "";
+    formMessage.hidden =
+        true;
+
+
+    formMessage.textContent =
+        "";
 
 }
 
@@ -967,11 +1571,31 @@ function hideMessage() {
 function escapeHTML(value) {
 
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
@@ -980,159 +1604,32 @@ function escapeHTML(value) {
    START ADMIN
 ========================================================= */
 
-loadProjects();
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        loadProjects();
+
+    }
+);
+
 
 /* =========================================================
-   DELETE PROJECT MODAL
+   LOGOUT BTN
 ========================================================= */
 
-const deleteModal = document.getElementById("deleteModal");
-const cancelDelete = document.getElementById("cancelDelete");
-const confirmDelete = document.getElementById("confirmDelete");
+const logoutBtn = document.getElementById("logoutBtn");
 
-let projectToDelete = null;
+logoutBtn?.addEventListener("click", async () => {
 
-
-/* OPEN DELETE MODAL */
-
-projectsList?.addEventListener("click", (event) => {
-
-    const deleteButton =
-        event.target.closest(".project-delete");
-
-    if (!deleteButton) return;
-
-    const projectId =
-        deleteButton.dataset.id;
-
-    if (!projectId) return;
-
-    projectToDelete = projectId;
-
-    deleteModal.classList.add("active");
-
-});
-
-
-/* CANCEL */
-
-cancelDelete?.addEventListener("click", () => {
-
-    closeDeleteModal();
-
-});
-
-
-/* CLOSE MODAL */
-
-function closeDeleteModal() {
-
-    deleteModal.classList.remove("active");
-
-    projectToDelete = null;
-
-}
-
-
-/* CLICK OUTSIDE */
-
-deleteModal?.addEventListener("click", (event) => {
-
-    if (event.target === deleteModal) {
-        closeDeleteModal();
-    }
-
-});
-
-
-/* CONFIRM DELETE */
-
-confirmDelete?.addEventListener("click", async () => {
-
-    if (!projectToDelete) return;
-
-    const id = projectToDelete;
-
-    confirmDelete.disabled = true;
-
-    confirmDelete.innerHTML = `
-        <i class="fa-solid fa-spinner fa-spin"></i>
-        Deleting...
-    `;
+    logoutBtn.disabled = true;
 
     try {
-
-        const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/projects?id=eq.${encodeURIComponent(id)}`,
-            {
-                method: "DELETE",
-
-                headers: {
-                    apikey: SUPABASE_KEY,
-                    Authorization: `Bearer ${SUPABASE_KEY}`,
-                    Prefer: "return=minimal"
-                }
-            }
-        );
-
-
-        if (!response.ok) {
-
-            const error =
-                await response.text();
-
-            console.error(error);
-
-            throw new Error("Delete failed");
-
-        }
-
-
-        // Remove from local projects array
-
-        projects = projects.filter(
-            project =>
-                String(project.id) !== String(id)
-        );
-
-
-        // Update dashboard
-
-        updateDashboard();
-
-
-        // Update project list
-
-        renderProjects();
-
-
-        showMessage(
-            "Project deleted successfully.",
-            "success"
-        );
-
-
-        closeDeleteModal();
-
-
+        await supabase.auth.signOut();
+        window.location.href = "admin-login.html";
     } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-            "Could not delete project.",
-            "error"
-        );
-
-    } finally {
-
-        confirmDelete.disabled = false;
-
-        confirmDelete.innerHTML = `
-            <i class="fa-solid fa-trash"></i>
-            Delete
-        `;
-
+        console.error("Logout error:", error);
+        logoutBtn.disabled = false;
     }
 
 });

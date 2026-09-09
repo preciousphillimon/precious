@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://precious.qzz.io/sitemap.xml
